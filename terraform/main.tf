@@ -1,45 +1,36 @@
 module "vpc" {
   source         = "git::https://github.com/cloud-design-dev/IBM-Cloud-VPC-Module.git"
-  name           = "${var.name}-vpc}"
+  name           = "${var.name}-vpc"
   resource_group = data.ibm_resource_group.project.id
-  tags           = concat(var, tags, ["project:${var.name}", "region:${var.region}"])
+  tags           = concat(var.tags, ["project:${var.name}", "region:${var.region}"])
 }
 
 module "public_gateway" {
   source         = "git::https://github.com/cloud-design-dev/IBM-Cloud-VPC-Public-Gateway-Module.git"
   name           = var.name
-  zone           = var.zone
-  vpc            = var.vpc
+  zone           = data.ibm_is_zones.region.zones[0]
+  vpc            = module.vpc.id
   resource_group = var.resource_group
-  tags           = concat(var, tags, ["project:${var.name}", "region:${var.region}"])
+  tags           = concat(var.tags, ["project:${var.name}", "region:${var.region}"])
 }
 
-module "bastion_subnet" {
+module "subnet" {
   source         = "git::https://github.com/cloud-design-dev/IBM-Cloud-VPC-Subnet-Module.git"
-  name           = var.name
-  resource_group = var.resource_group
-  network_acl    = var.network_acl
-  address_count  = var.address_count
-  vpc            = var.vpc_id
-  zone           = var.zone
-  public_gateway = var.public_gateway
-  tags           = concat(var, tags, ["project:${var.name}", "region:${var.region}"])
-}
-
-
-module "consul_subnet" {
-  source         = "git::https://github.com/cloud-design-dev/IBM-Cloud-VPC-Subnet-Module.git"
-  name           = var.name
-  resource_group = var.resource_group
-  network_acl    = var.network_acl
-  address_count  = var.address_count
-  vpc            = var.vpc_id
-  zone           = var.zone
-  public_gateway = var.public_gateway
-  tags           = concat(var, tags, ["project:${var.name}", "region:${var.region}"])
+  name           = "${var.name}-subnet"
+  resource_group = data.ibm_resource_group.project.id
+  network_acl    = module.vpc.default_network_acl
+  address_count  = "32"
+  vpc            = module.vpc.id
+  zone           = data.ibm_is_zones.region.zones[0]
+  public_gateway = module.public_gateway.id
+  tags           = concat(var.tags, ["project:${var.name}", "region:${var.region}"])
 }
 
 module "security" {
+  source         = "./security"
+  vpc_id         = module.vpc.id
+  name           = var.name
+  resource_group = data.ibm_resource_group.project.id
 
 }
 
@@ -51,26 +42,29 @@ module "bastion" {
   version = "0.0.7"
 
   name              = "${var.name}-bastion"
-  resource_group_id = local.resource_group_id
+  resource_group_id = data.ibm_resource_group.project.id
   vpc_id            = module.vpc.id
-  subnet_id         = module.bastion_subnet.id
-  ssh_key_ids       = local.ssh_key_ids
-  tags              = concat(var, tags, ["project:${var.name}", "region:${var.region}"])
+  subnet_id         = module.subnet.id
+  ssh_key_ids       = [data.ibm_is_ssh_key.deployment_key.id]
+  allow_ssh_from    = var.allow_ssh_from
+  create_public_ip  = var.create_public_ip
+  init_script       = file("./instance/install.yml")
+  tags              = concat(var.tags, ["project:${var.name}", "region:${var.region}", "zone:${data.ibm_is_zones.region.zones[0]}"])
 }
 
 
 module "consul_cluster" {
-  count           = var.instance_count
-  source          = "./instance"
-  vpc_id          = module.vpc.id
-  subnets         = [module.bastion_subnet.id, module.consul_subnet.id]
-  ssh_keys        = local.ssh_key_ids
-  resource_group  = data.ibm_resource_group.project.id
-  name            = "${var.name}-consul${count.index + 1}"
-  zone            = data.ibm_is_zones.region.zones[0]
-  security_groups = [module.security.consul_security_group, module.bastion.bastion_maintenance_group_id]
-  tags            = concat(var.tags, ["project:${var.name}", "region:${var.region}", "zone:${data.ibm_is_zones.mzr.zones[0]}"])
-  user_data       = file("${path.module}/install.yml")
+  depends_on        = [module.security]
+  count             = var.instance_count
+  source            = "./instance"
+  vpc_id            = module.vpc.id
+  subnet            = module.subnet.id
+  ssh_keys          = [data.ibm_is_ssh_key.deployment_key.id]
+  resource_group_id = data.ibm_resource_group.project.id
+  name              = "${var.name}-consul${count.index + 1}"
+  zone              = data.ibm_is_zones.region.zones[0]
+  security_groups   = [module.security.consul_security_group, module.bastion.bastion_maintenance_group_id]
+  tags              = concat(var.tags, ["project:${var.name}", "region:${var.region}", "zone:${data.ibm_is_zones.region.zones[0]}"])
+  user_data         = file("./instance/install.yml")
 }
 
-# 

@@ -1,1 +1,3 @@
-provider "ibm" {}
+provider "ibm" {
+  region = var.region
+}

@@ -1,0 +1,5 @@
+resource_group = "CDE"
+name           = "sch101"
+region         = "us-east"
+ssh_key        = "hyperion-us-east"
+allow_ssh_from = "98.40.239.8"

@@ -18,7 +18,31 @@ variable "region" {
 
 
 variable "instance_count" {
-  type        = integer
+  type        = number
   description = ""
   default     = 1
+}
+
+variable "ssh_key" {
+  type        = string
+  description = "Name of an existing SSH key that will be added to the compute instances."
+  default     = ""
+}
+
+variable "allow_ssh_from" {
+  type        = string
+  description = "An IP address, a CIDR block, or a single security group identifier to allow incoming SSH connection to the bastion."
+  default     = ""
+}
+
+variable "create_public_ip" {
+  type        = bool
+  description = "Set whether to allocate a public IP address for the bastion instance. Default is `true`."
+  default     = true
+}
+
+variable "tags" {
+  type        = list(string)
+  description = ""
+  default     = ["owner:ryantiffany"]
 }
