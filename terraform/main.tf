@@ -7,10 +7,10 @@ module "vpc" {
 
 module "public_gateway" {
   source         = "git::https://github.com/cloud-design-dev/IBM-Cloud-VPC-Public-Gateway-Module.git"
-  name           = var.name
+  name           = "${var.name}-pub-gw"
   zone           = data.ibm_is_zones.region.zones[0]
   vpc            = module.vpc.id
-  resource_group = var.resource_group
+  resource_group = data.ibm_resource_group.project.id
   tags           = concat(var.tags, ["project:${var.name}", "region:${var.region}"])
 }
 

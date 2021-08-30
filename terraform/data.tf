@@ -1,5 +1,5 @@
 data "ibm_is_ssh_key" "deployment_key" {
-  name = "hyperion-${var.region}"
+  name = var.ssh_key
 }
 
 data "ibm_resource_group" "project" {
