@@ -1,0 +1,12 @@
+{
+  "name": "testschematics",
+  "type": [
+    "terraform_v0.12"
+  ],
+  "description": "Test postman schematics creation",
+  "resource_group": "ac83304b2fb6492e95995812da85b653",
+  "tags": [],
+  "template_repo": {
+    "url": "https://github.com/greyhoundforty/2-zone-vpc-example/tree/cde"
+  }
+}

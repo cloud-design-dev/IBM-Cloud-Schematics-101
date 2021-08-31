@@ -1,0 +1,62 @@
+{
+    "name": "sch101cli-workspace",
+    "type": [
+        "terraform_v0.15"
+    ],
+    "location": "us-south",
+    "description": "Schematics workspace created via the CLI.",
+    "tags": ["owner:ryantiffany", "project:sch101"],
+    "resource_group": "ac83304b2fb6492e95995812da85b653",
+    "template_repo": {
+        "url": "https://github.com/cloud-design-dev/IBM-Cloud-Schematics-101"
+    },
+    "template_data": [
+        {
+        "folder": "terraform/",
+        "type": "terraform_v0.15",
+        "variablestore": [
+        {
+          "name": "resource_group",
+          "value": "CDE",
+          "type": "string",
+          "description":"RG for project"
+        },
+        {
+          "name": "region",
+          "value": "jp-osa",
+          "type": "string",
+          "secure": false,
+          "description":"Region for project"
+        },
+    {
+          "name": "name",
+          "value": "sch101cli",
+          "type": "string",
+          "secure": false,
+          "description":"Name prefixed to all project resources."
+        },
+    {
+          "name": "ssh_key",
+          "value": "hyperion-jp-osa",
+          "type": "string",
+          "secure": false,
+          "description":"SSH key to inject in to compute instances."
+        },
+    {
+          "name": "allow_ssh_from",
+          "value": "0.0.0.0/0",
+          "type": "string",
+          "secure": false,
+          "description":"An IP, CIDR, or Security Group that will be allowed SSH access to the bastion host."
+        },
+    {
+          "name": "instance_count",
+          "value": "1",
+          "type": "number",
+          "secure": false,
+          "description":"Number of consul servers to create."
+        }
+        ]
+    }
+    ]
+}
