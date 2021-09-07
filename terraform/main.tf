@@ -77,13 +77,3 @@ module "consul_cluster" {
 #  tags           = concat(var.tags, ["project:${var.name}", "region:${var.region}", "zone:${data.ibm_is_zones.region.zones[0]}"])
 #}
 
-data "template_file" "init" {
- template = "${file("${path.module}/query.tmpl")}"
- vars = {
-   workspace = lookup(data.external.env.result, "TF_VAR_IC_SCHEMATICS_WORKSPACE_ID", "")
- }
-}
-
-output "rendered" {
-value = data.template_file.init.rendered
-}
