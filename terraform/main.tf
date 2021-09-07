@@ -85,5 +85,5 @@ data "template_file" "init" {
 }
 
 output "rendered" {
-value = template_file.init.rendered
+value = data.template_file.init.rendered
 }
