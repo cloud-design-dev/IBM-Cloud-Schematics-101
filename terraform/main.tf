@@ -31,7 +31,6 @@ module "security" {
   vpc_id         = module.vpc.id
   name           = var.name
   resource_group = data.ibm_resource_group.project.id
-
 }
 
 #
@@ -68,3 +67,23 @@ module "consul_cluster" {
   user_data         = file("./instance/install.yml")
 }
 
+#module "loadbalancer" {
+#  source         = "./loadbalancer"
+#  name           = var.name
+#  resource_group = var.resource_group
+#  ips            = module.consul_cluster[*].primary_ipv4_address
+#  instances      = module.consul_cluster[*].id
+#  subnet         = module.subnet.id
+#  tags           = concat(var.tags, ["project:${var.name}", "region:${var.region}", "zone:${data.ibm_is_zones.region.zones[0]}"])
+#}
+
+#data "template_file" "init" {
+#  template = "${file("${path.module}/query.tmpl")}"
+#  vars = {
+#    workspace = lookup(data.external.env.result, "TF_VAR_IC_SCHEMATICS_WORKSPACE_ID", "")
+#  }
+#}
+
+#output "rendered" {
+#value = template_file.init.rendered
+#}

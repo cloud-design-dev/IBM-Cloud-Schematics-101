@@ -22,5 +22,5 @@ resource "ibm_is_instance" "instance" {
   }
 
   force_recovery_time = var.force_recovery_time
-  tags                = var.tags
+  tags                = concat(var.tags, ["type:instance"])
 }

@@ -9,3 +9,5 @@ data "ibm_resource_group" "project" {
 data "ibm_is_zones" "region" {
   region = var.region
 }
+
+data "external" "env" { program = ["jq", "-n", "env"] }
