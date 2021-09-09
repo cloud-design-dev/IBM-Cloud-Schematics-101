@@ -89,9 +89,8 @@ resource "local_file" "resource_query" {
  resource "null_resource" "generate_rq" {
    provisioner "local-exec" {
      command = <<-EOT
-      exec "ibmcloud plugin install schematics"
-      exec "RQ_ID=$(ibmcloud schematics resource-query create --name schematics-rq --query-file ${path.module}/resource-query.json --output json | jq -r '.name'"
-      exec "ibmcloud schematics resource-query run --id $RQ_ID"
+      exec "ibmcloud plugin repo-plugins"
+      exec "ibmcloud plugin repo-plugins | grep schematics"
     EOT
    }
 }
