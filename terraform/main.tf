@@ -77,3 +77,20 @@ module "consul_cluster" {
 #  tags           = concat(var.tags, ["project:${var.name}", "region:${var.region}", "zone:${data.ibm_is_zones.region.zones[0]}"])
 #}
 
+resource "local_file" "resource_query" {
+  content = templatefile("${path.module}/query.tmpl"),
+    {
+      workspace = lookup(data.external.env.result, "TF_VAR_IC_SCHEMATICS_WORKSPACE_ID", "")
+    }
+  )
+  filename = "${path.module}/resource-query.json"
+}
+    
+ resource "null_resource" "generate_rq" {
+   provisioner "local-exec" {
+     command = <<-EOT
+      exec "RQ_ID=$(ibmcloud schematics resource-query create --name schematics-rq --query-file ${path.module}/resource-query.json --output json | jq -r '.id')"
+      exec "ibmcloud schematics resource-query run --id $RQ_ID"
+    EOT
+   }
+}
