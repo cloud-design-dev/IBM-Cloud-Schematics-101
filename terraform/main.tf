@@ -78,7 +78,7 @@ module "consul_cluster" {
 #}
 
 resource "local_file" "resource_query" {
-  content = templatefile("${path.module}/query.tmpl"),
+  content = templatefile("${path.module}/query.tmpl",
     {
       workspace = lookup(data.external.env.result, "TF_VAR_IC_SCHEMATICS_WORKSPACE_ID", "")
     }
