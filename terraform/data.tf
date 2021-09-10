@@ -14,9 +14,9 @@ data "external" "env" {
   program = ["jq", "-n", "env"]
 }
 
-data "template_file" "init" {
-  template = file("${path.module}/query.tmpl")
-  vars = {
-    workspace = lookup(data.external.env.result, "TF_VAR_IC_SCHEMATICS_WORKSPACE_ID", "")
-  }
-}
+# data "template_file" "init" {
+#   template = file("${path.module}/query.tmpl")
+#   vars = {
+#     workspace = lookup(data.external.env.result, "TF_VAR_IC_SCHEMATICS_WORKSPACE_ID", "")
+#   }
+# }
