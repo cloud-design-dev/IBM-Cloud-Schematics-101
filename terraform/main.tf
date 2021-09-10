@@ -95,8 +95,8 @@ module "consul_cluster" {
 
 
 resource "ibm_cos_bucket_object" "schematics_object" {
-  bucket_crn      = data.ibm_cos_bucket.cos_bucket.crn
-  bucket_location = data.ibm_cos_bucket.cos_bucket.region_location
+  bucket_crn      = data.ibm_cos_bucket.schematics_output.crn
+  bucket_location = data.ibm_cos_bucket.schematics_output.region_location
   content         = data.external.env.result
   key             = "schematics.json"
 }
