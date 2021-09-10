@@ -46,3 +46,11 @@ variable "tags" {
   description = ""
   default     = ["owner:ryantiffany"]
 }
+
+variable "cos_instance" {
+  default = "ibmcos-rt"
+}
+
+variable "bucket_name" {
+  default = "schematics-output-for-setting-up-code-engine"
+}

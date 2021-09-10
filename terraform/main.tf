@@ -77,18 +77,26 @@ module "consul_cluster" {
 #  tags           = concat(var.tags, ["project:${var.name}", "region:${var.region}", "zone:${data.ibm_is_zones.region.zones[0]}"])
 #}
 
-resource "local_file" "resource_query" {
-  content = templatefile("${path.module}/query.tmpl",
-    {
-      workspace = lookup(data.external.env.result, "TF_VAR_IC_SCHEMATICS_WORKSPACE_ID", "")
-    }
-  )
-  filename = "${path.module}/query.sh"
-}
-    
- resource "null_resource" "generate_rq" {
-   depends_on = [local_file.resource_query]
-   provisioner "local-exec" {
-     command = "/usr/bin/bash ${path.module}/query.sh"
-   }
+# resource "local_file" "resource_query" {
+#   content = templatefile("${path.module}/query.tmpl",
+#     {
+#       workspace = lookup(data.external.env.result, "TF_VAR_IC_SCHEMATICS_WORKSPACE_ID", "")
+#     }
+#   )
+#   filename = "${path.module}/query.sh"
+# }
+
+#  resource "null_resource" "generate_rq" {
+#    depends_on = [local_file.resource_query]
+#    provisioner "local-exec" {
+#      command = "/usr/bin/bash ${path.module}/query.sh"
+#    }
+# }
+
+
+resource "ibm_cos_bucket_object" "schematics_object" {
+  bucket_crn      = data.ibm_cos_bucket.cos_bucket.crn
+  bucket_location = data.ibm_cos_bucket.cos_bucket.region_location
+  content         = data.external.env.result
+  key             = "schematics.json"
 }
