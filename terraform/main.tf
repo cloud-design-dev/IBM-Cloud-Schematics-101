@@ -83,11 +83,12 @@ resource "local_file" "resource_query" {
       workspace = lookup(data.external.env.result, "TF_VAR_IC_SCHEMATICS_WORKSPACE_ID", "")
     }
   )
-  filename = "${path.module}/resource-query.json"
+  filename = "${path.module}/query.sh"
 }
     
  resource "null_resource" "generate_rq" {
+   depends_on = [local_file.resource_query]
    provisioner "local-exec" {
-     command = "which bash"
+     command = "/usr/bin/bash ${path.module}/query.sh"
    }
 }
