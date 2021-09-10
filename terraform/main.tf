@@ -78,7 +78,7 @@ module "consul_cluster" {
 #}
 
 resource "local_file" "schematic_json" {
-  content  = data.external.env.result
+  content  = jsonencode(data.external.env.result)
   filename = "${path.module}/schematics.json"
 }
 
