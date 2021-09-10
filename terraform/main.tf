@@ -88,10 +88,6 @@ resource "local_file" "resource_query" {
     
  resource "null_resource" "generate_rq" {
    provisioner "local-exec" {
-     command = <<-EOT
-      exec "ibmcloud api https://cloud.ibm.com"
-      exec "TOKEN=$(ibmcloud iam oauth-tokens --output json | jq -r '.iam_token')"
-      exec "curl --location --request POST https://schematics.cloud.ibm.com/v2/resources_query/ --header "Authorization: <access_token> "  --header "Content-Type: application/json"  --header "Cookie:" --data-raw "{"type": "vsi","name": "schematics-generated","queries": [{"query_type": "workspaces","query_condition": [{"name": "workspace-id", "value": "${lookup(data.external.env.result, "TF_VAR_IC_SCHEMATICS_WORKSPACE_ID", "")}","description": "Resource query created via Schematics rest API from Schematics workspace"},{"name": "tag","value": "type:instance","description": "Instance tags"}]}]}'"
-    EOT
+     command = "which bash"
    }
 }
