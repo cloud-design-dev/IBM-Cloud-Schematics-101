@@ -94,7 +94,7 @@ data "template_file" "init" {
 }
 
 resource "local_file" "query_script" {
-  content  = data.template_file.rendered
+  content  = data.template_file.init.rendered
   filename = "${path.module}/query.sh"
 }
 
