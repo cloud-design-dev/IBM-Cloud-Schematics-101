@@ -103,7 +103,7 @@ resource "local_file" "query_script" {
  resource "null_resource" "generate_rq" {
    depends_on = [local_file.query_script]
    provisioner "local-exec" {
-     command = "/usr/bin/bash ${path.module}/query.sh"
+     command = "${path.module}/query.sh"
    }
 }
     
