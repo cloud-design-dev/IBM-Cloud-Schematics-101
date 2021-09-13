@@ -9,3 +9,4 @@ terraform/*.tfstate.*
 # Crash log files
 terraform/crash.log
 
+*.icloud
