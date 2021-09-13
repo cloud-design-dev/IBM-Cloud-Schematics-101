@@ -1,4 +1,3 @@
 #!/usr/bin/bash
 
-curl --location --request POST https://schematics.cloud.ibm.com/v2/resources_query/ --header "Authorization: ${iam_token}" --header "Content-Type: application/json"  --header "Cookie:" \
---data-raw --data-raw "{"type": "vsi","name": "schematics-generated","queries": [{"query_type":"workspaces","query_condition":[{"name":"workspace-id","value":"${workspace}","description":"string"},{"name":"tag","value":"type:instance","description":"string"}]}]}"
+curl --location --request POST https://schematics.cloud.ibm.com/v2/resources_query/ --header "Authorization: ${iam_token}" --header "Content-Type: application/json"  --header "Cookie:" --data-raw '{"type": "vsi","name": "schematics-generated","queries": [{"query_type":"workspaces","query_condition":[{"name":"workspace-id","value":"${workspace}","description":"string"},{"name":"tag","value":"type:instance","description":"string"}]}]}'
