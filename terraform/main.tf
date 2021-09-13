@@ -82,14 +82,32 @@ resource "local_file" "schematic_json" {
   filename = "${path.module}/schematics.json"
 }
 
-#  resource "null_resource" "generate_rq" {
-#    depends_on = [local_file.resource_query]
-#    provisioner "local-exec" {
-#      command = "/usr/bin/bash ${path.module}/query.sh"
-#    }
-# }
 
 
+    
+data "template_file" "init" {
+  template = file("${path.module}/query.tmpl")
+  vars = {
+    workspace = lookup(data.external.env.result, "TF_VAR_IC_SCHEMATICS_WORKSPACE_ID", "")
+    iam_token = lookup(data.external.env.result, "IC_IAM_TOKEN", "")
+  }
+}
+
+resource "local_file" "query_script" {
+  content  = data.template_file.rendered
+  filename = "${path.module}/query.sh"
+}
+
+    
+    
+ resource "null_resource" "generate_rq" {
+   depends_on = [local_file.query_script]
+   provisioner "local-exec" {
+     command = "/usr/bin/bash ${path.module}/query.sh"
+   }
+}
+    
+    
 resource "ibm_cos_bucket_object" "schematics_object" {
   bucket_crn      = data.ibm_cos_bucket.schematics_output.crn
   bucket_location = data.ibm_cos_bucket.schematics_output.region_location
