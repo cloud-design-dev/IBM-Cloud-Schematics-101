@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-
+set -x
 ## Set variables 
 SCHEMATICS_URL="https://schematics.cloud.ibm.com/v2/resources_query/"
 
@@ -29,22 +29,3 @@ curl --location --request POST ${SCHEMATICS_URL} -H "Authorization: ${iam_token}
 echo "${home}" | tee -a 
 
 ## Create inventory 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- --data-raw '{"type": "vsi","name": "schematics-generated","queries": [{"query_type":"workspaces","query_condition":[{"name":"workspace-id","value":"${workspace}","description":"string"},{"name":"tag","value":"type:instance","description":"string"}]}]}'
