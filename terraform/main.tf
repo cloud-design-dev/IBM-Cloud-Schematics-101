@@ -63,7 +63,7 @@ module "consul_cluster" {
   name              = "${var.name}-consul${count.index + 1}"
   zone              = data.ibm_is_zones.region.zones[0]
   security_groups   = [module.security.consul_security_group, module.bastion.bastion_maintenance_group_id]
-  tags              = concat(var.tags, ["project:${var.name}", "region:${var.region}", "zone:${data.ibm_is_zones.region.zones[0]}"])
+  tags              = concat(var.tags, ["project:${var.name}", "region:${var.region}", "zone:${data.ibm_is_zones.region.zones[0]}", var.special_tag])
   user_data         = file("./instance/install.yml")
 }
 
@@ -92,6 +92,7 @@ data "template_file" "init" {
     iam_token           = lookup(data.external.env.result, "IC_IAM_TOKEN", "")
     resource_query_name = "${var.name}-resource-query"
     home                = lookup(data.external.env.result, "HOME", "")
+    tag                 = var.special_tag
   }
 }
 

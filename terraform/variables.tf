@@ -54,3 +54,7 @@ variable "cos_instance" {
 variable "bucket_name" {
   default = "schematics-output-for-setting-up-code-engine"
 }
+
+variable "special_tag" {
+  default = "lab-inventory"
+}
